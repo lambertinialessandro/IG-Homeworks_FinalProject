@@ -68,4 +68,4 @@ We also suggest to play the game in full screen (press `F11`)
 
 </details>
 
-### [Click here to play the game.](https://sapienzainteractivegraphicscourse.github.io/final-project-la_dl-team/)
+### [Click here to play the game.](https://lambertinialessandro.github.io/final-project-la_dl-team/)
