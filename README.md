@@ -30,6 +30,12 @@ Online Normal Map Generator [Link 🔗](https://cpetry.github.io/NormalMap-Onlin
 
 Models downloaded from sketchfab [Link 🔗](https://sketchfab.com/)
 
+## 📝 Assignment
+
+text [Link 🔗](./Project_Requirements.pdf)
+<br />
+In this file you can read more about the exam and the task to do.
+
 ## 📜 Report
 
  report [Link 🔗](./Report.pdf)
@@ -69,3 +75,9 @@ We also suggest to play the game in full screen (press `F11`)
 </details>
 
 ### [Click here to play the game.](https://lambertinialessandro.github.io/final-project-la_dl-team/)
+
+## 💯 Final score:
+
+Score: `21/21`
+
+Comment: "Excellent project"
