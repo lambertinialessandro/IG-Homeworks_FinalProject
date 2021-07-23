@@ -533,3 +533,18 @@ a{
 .divStats{
     width: max-content;
 }
+
+
+
+@media (max-width: 800px) {
+    /* CSS that should be displayed if width is equal to or less than 800px goes here */
+
+    #MainLogo{
+        width: 250px;
+        height: 150px;
+    }
+
+    #commandsFlyMode, #SMF, #SMFF, #SMMF, #Piranha{
+        display: none;
+    }
+  }
