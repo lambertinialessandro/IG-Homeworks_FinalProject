@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Alessandro Lambertini HW2 IG</title>
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            font-family: Tahoma;
+        }
+
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 10px;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        h1 {
+            font: normal 3em Josefin Sans, Arial, Helvetica;
+            text-transform: capitalize;
+            text-align: center;
+            margin: 5px 25px 0px 25px;
+            text-shadow: 0px 6px 15px #1000ff61;
+        }
+
+        .secondTitle {
+            font: normal 2em Josefin Sans, Arial, Helvetica;
+            text-shadow: 0px 6px 15px #1000ff61;
+        }
+
+        .infoP {
+            font-size: 15px;
+            font-weight: lighter;
+            max-width: fit-content;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none !important;
+            border-radius: 25px;
+            background: #d3d3d3;
+            border: 1px solid #0000ff61;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: opacity .15s ease-in-out;
+            transition: opacity .15s ease-in-out;
+        }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 25px;
+            background: #2b2bff;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            background: #2b2bff;
+            transition: all 0.5s;
+            border-radius: 10px;
+            box-shadow: 0px 6px 15px #0000ff61;
+        }
+
+        input[type="button"] {
+            font-family: Hack, monospace;
+            background: #c6c6c6;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 7px;
+            border: 0;
+            transition: all 0.3s;
+            border-radius: 10px;
+        }
+
+        input[type="button"]:hover {
+            background: #2b2bff;
+            transition: all 0.5s;
+            border-radius: 10px;
+            box-shadow: 0px 6px 15px #0000ff61;
+        }
+
+        .divCanvas, .divInfoBox {
+            float: left;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #0014ff;
+            text-align: center;
+            background: #8b8ef5;
+            box-shadow: 0px 6px 15px #1000ff61;
+            margin: 10px;
+        }
+        .divInfoBox {
+            width: 343px;
+            word-wrap: break-word;
+        }
+        .divInfoBox p span{
+            color: white;
+            text-shadow: 0 0 2px brown;
+        }
+
+        .divSettings {
+            float: left;
+        }
+
+        .settingsContainer {
+            background: rgba(0, 0, 0, 0.2);
+            width: fit-content;
+        }
+
+        .settingsFigure {
+            padding: 2px;
+            width: 100%;
+            text-align: -webkit-center;
+        }
+
+        .divRotPosFigure {
+            margin: 10px auto;
+            min-width: max-content;
+        }
+
+        .divSliderFigure {
+            text-align: center;
+        }
+
+        .sliderMin,
+        .sliderMax {
+            padding: 2px;
+        }
+
+        .buttonFigure {
+            margin: 0px 0px 0px 10px;
+        }
+
+        .buttonFigureReset {
+            float: left;
+        }
+
+        .tdFlag {
+            padding: 2px;
+            width: 100px;
+        }
+
+        .stateFlag {
+            border: 1px solid #0014ff;
+            border-radius: 25px;
+            padding: 2px 6px 5px 6px;
+            text-align: center;
+            background: #8b8ef5;
+            box-shadow: 0px 6px 15px #1000ff61;
+        }
+
+        .flagTrue {
+            border: 1px solid #1bff00;
+            border-radius: 25px;
+            padding: 3px 8px 6px 8px;
+            text-align: center;
+            background: #8bf58e;
+            box-shadow: 0px 6px 15px #1bff0061;
+        }
+
+        .flagFalse {
+            border: 1px solid red;
+            border-radius: 25px;
+            padding: 2px 6px 5px 6px;
+            text-align: center;
+            background: #f58b8b;
+            box-shadow: 0px 6px 15px #ff000061;
+        }
+
+        .bottomText {
+            position: absolute;
+            bottom: 25px;
+            right: 20px;
+            font: normal 1.2em Josefin Sans, Arial, Helvetica;
+            text-shadow: 0px 6px 15px #1000ff61;
+        }
+    </style>
+
+    <script type="text/javascript" src="./common/InitShaders.js"></script>
+    <script type="text/javascript" src="./common/MVnew.js"></script>
+    <script type="text/javascript" src="./Homework2.js"></script>
+</head>
+
+<body>
+    <img src="./images/sheep.jpg" id="imageWool" crossorigin="anonymous" hidden/>
+    <img src="./images/head.jpg"  id="imageHead" crossorigin="anonymous" hidden/>
+    <img src="./images/fence.jpg" id="imageFence" crossorigin="anonymous" hidden/>
+    <img src="./images/grass.jpg" id="imageGrass" crossorigin="anonymous" hidden/>
+    
+    <img src="./images/normalSheep.jpg" id="imageWoolBump" crossorigin="anonymous" hidden/>
+    <img src="./images/normalGrass.jpg" id="imageGrassBump" crossorigin="anonymous" hidden/>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+
+        in vec4 aPosition;
+        in vec2 aTexCoord;
+        in vec4 aNormal;
+        in vec4 aTangent;
+
+        out vec2 vTexCoord;
+        out vec3 vL, vE, vNN;
+
+        uniform mat4 uModelViewMatrix;
+        uniform mat4 uRotationMatrix;
+        uniform mat4 uProjectionMatrix;
+        uniform mat3 uNormalMatrix;
+
+        uniform bool uTexMapWoolFlag;
+        uniform bool uTexMapGrassFlag;
+        uniform vec4 uLightPositions;
+
+        void main()
+        {
+            gl_Position = uProjectionMatrix * uModelViewMatrix * uRotationMatrix * aPosition;
+
+            vec3 N;
+            vec3 T;
+            if(uTexMapWoolFlag || uTexMapGrassFlag){
+                N = normalize( uNormalMatrix * (uRotationMatrix * aNormal).xyz );
+                T = normalize( uNormalMatrix * (uRotationMatrix * aTangent).xyz );
+            } else {
+                N = normalize( (uModelViewMatrix * uRotationMatrix * aNormal).xyz );
+                T = normalize( (uModelViewMatrix * uRotationMatrix * aTangent).xyz );
+                vNN = normalize( (uModelViewMatrix * uRotationMatrix * aNormal).xyz );
+            }
+
+            vec3 eyePosition = (uModelViewMatrix * uRotationMatrix * aPosition).xyz;
+            vec3 B = cross(N, T);
+            vE = normalize(-eyePosition);
+
+            vec3 eyeLightPos = (uModelViewMatrix * uLightPositions).xyz;
+
+            if(uTexMapWoolFlag || uTexMapGrassFlag){
+                vL = normalize(vec3( dot(T, eyeLightPos - eyePosition),
+                                     dot(B, eyeLightPos - eyePosition),
+                                     dot(N, eyeLightPos - eyePosition) ));
+            } else {
+                vL = normalize(eyeLightPos - eyePosition);
+            }
+
+            vTexCoord = aTexCoord;
+        }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+
+        precision mediump float;
+
+        in vec2 vTexCoord;
+        in vec3 vL, vE, vNN;
+
+        out vec4 fColor;
+
+        uniform sampler2D uTexMapWool, uBumpMapWool;
+        uniform sampler2D uTexMapHead;
+        uniform sampler2D uTexMapFence;
+        uniform sampler2D uTexMapGrass, uBumpMapGrass;
+
+        uniform bool uTexMapWoolFlag;
+        uniform bool uTexMapHeadFlag;
+        uniform bool uTexMapFenceFlag;
+        uniform bool uTexMapGrassFlag;
+
+        uniform vec4 uAmbientProducts, uDiffuseProducts, uSpecularProducts;
+        uniform float uShininess;
+
+        void main() {
+            vec3 NN;
+            if(uTexMapWoolFlag){
+                vec4 N = texture(uBumpMapWool, vTexCoord);
+                NN = normalize(2.0*N.xyz-1.0);
+            } else if(uTexMapGrassFlag){
+                vec4 N = texture(uBumpMapGrass, vTexCoord);
+                NN = normalize(2.0*N.xyz-1.0);
+            }else {
+                NN = vNN;
+            }
+
+            vec3 H = normalize(vL + vE);
+            vec4 ambient = uAmbientProducts;
+            vec3 LL = normalize(vL);
+            float Kd = max(dot(LL, NN), 0.0);
+            vec4 diffuse = Kd*uDiffuseProducts;
+            float Ks = pow( max(dot(NN, H), 0.0), uShininess );
+            vec4 specular = Ks * uSpecularProducts;
+            if( dot(H, NN) < 0.0 ) {
+                specular = vec4(0.0, 0.0, 0.0, 1.0);
+            }
+            vec4 totalLight = ambient+diffuse+specular;
+
+            if (uTexMapWoolFlag){
+                fColor = totalLight * texture(uTexMapWool, vTexCoord);
+            } else if (uTexMapHeadFlag){
+                fColor = totalLight * texture(uTexMapHead, vTexCoord);
+            } else if (uTexMapFenceFlag){
+                fColor = totalLight * texture(uTexMapFence, vTexCoord);
+            } else if(uTexMapGrassFlag){
+                fColor = totalLight * texture(uTexMapGrass, vTexCoord);
+            } else {
+                fColor = vec4(1.0, 0.9, 0.0, 1.0);
+            }
+            fColor.a = 1.0;
+        }
+    </script>
+
+    <div>
+        <div class="divSettings">
+            <div class="settingsFigure">
+                <h1 class="firstTitle">Flag Buttons</h1>
+                <table class="divRotPosFigure">
+                    <tr class="divSliderFigure">
+                        <td class="tdFlag"><input id="Start" type="button" value="▶️"></td>
+                        <td class="tdFlag"><input id="Stop" type="button" value="⏸"></td>
+                        <td class="tdFlag"><input id="Reset" type="button" value="⏮"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="settingsFigure">
+                <h1 class="firstTitle">View Settings</h1>
+                <table class="divRotPosFigure">
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">zNear 0.1</span></td>
+                        <td><input id="zNearSlider" class="sliderFigure" type="range" min="0.1" max="3" step="0.1"
+                                value="0.1"></td>
+                        <td><span class="sliderMax">3</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('zNearSlider', 0.1)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">zFar 3</span></td>
+                        <td><input id="zFarSlider" class="sliderFigure" type="range" min="3" max="1000" step="1"
+                                value="1000"></td>
+                        <td><span class="sliderMax">1000</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('zFarSlider', 1000)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">radius 1</span></td>
+                        <td><input id="radiusSlider" class="sliderFigure" type="range" min="1" max="120" step="1"
+                                value="80"></td>
+                        <td><span class="sliderMax">120</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('radiusSlider', 80)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">theta -90</span></td>
+                        <td><input id="thetaSlider" class="sliderFigure" type="range" min="-90" max="90" step="10"
+                                value="20"></td>
+                        <td><span class="sliderMax">90</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('thetaSlider', 20)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">phi -180</span></td>
+                        <td><input id="phiSlider" class="sliderFigure" type="range" min="-180" max="180" step="10"
+                                value="0"></td>
+                        <td><span class="sliderMax">180</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('phiSlider', 0)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">fov 10</span></td>
+                        <td><input id="fovSlider" class="sliderFigure" type="range" min="10" max="120" step="5"
+                                value="65"></td>
+                        <td><span class="sliderMax">120</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('fovSlider', 65)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">aspect 0.5</span></td>
+                        <td><input id="aspectSlider" class="sliderFigure" type="range" min="0.5" max="2" step="0.1"
+                                value="1.0"></td>
+                        <td><span class="sliderMax">2</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset"
+                                onclick="resetSlider('aspectSlider', 1.0)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td colspan="4"><input class="buttonFigureReset" type="button" value="reset All Settings"
+                                onclick="resetView()"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="divCanvas">
+            <canvas id="gl-canvas" width="700" height="650"> </canvas>
+        </div>
+
+        <div class="divInfoBox">
+            <h1 class="firstTitle">Info</h1>
+            <p>
+                You can move the view by using <span>slider</span> or by <span>clicking</span> the canvas and <span>dragging
+                the mouse.</span><br>
+                You can change the distance from the view by using the <span>slider</span> or with the <span>mouse wheel.</span><br>
+            </p>
+        </div>
+
+        <span class="bottomText">Made by Alessandro Lambertini<br>Mat: 1938390</span>
+    </div>
+</body>
+</html>
