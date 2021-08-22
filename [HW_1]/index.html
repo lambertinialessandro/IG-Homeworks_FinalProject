@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Alessandro Lambertini HW1 IG</title>
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            font-family: Tahoma;
+        }
+        a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+        canvas {
+            background: white;
+            border-radius: 10px;
+        }
+        td{
+            text-align: center;
+        }
+
+        h1{
+            font: normal 3em Josefin Sans,Arial,Helvetica;
+            text-transform: capitalize;
+            text-align: center;
+            margin: 5px 25px 0px 25px;
+            text-shadow: 0px 6px 15px #1000ff61;
+        }
+        .secondTitle{
+            font: normal 2em Josefin Sans,Arial,Helvetica;
+            text-shadow: 0px 6px 15px #1000ff61;
+        }
+        .infoP{
+            font-size: 15px;
+            font-weight: lighter;
+            max-width: fit-content;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none !important;
+            border-radius: 25px;
+            background: #d3d3d3;
+            border: 1px solid #0000ff61;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: opacity .15s ease-in-out;
+            transition: opacity .15s ease-in-out;
+        }
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 25px;
+            background: #2b2bff;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
+            background: #2b2bff;
+            transition: all 0.5s;
+            border-radius: 10px;
+            box-shadow: 0px 6px 15px #0000ff61;
+        }
+
+        input[type="button"] {
+            font-family: Hack, monospace;
+            background: #c6c6c6;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px 7px;
+            border: 0;
+            transition: all 0.3s;
+            border-radius: 10px;
+        }
+        input[type="button"]:hover {
+            background: #2b2bff;
+            transition: all 0.5s;
+            border-radius: 10px;
+            box-shadow: 0px 6px 15px #0000ff61;
+        }
+
+        .divCanvas {
+            float: left;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #0014ff;
+            text-align: center;
+            background: #8b8ef5;
+            box-shadow: 0px 6px 15px #1000ff61;
+            margin: 10px;
+        }
+        .divSettings {
+            float: left;
+        }
+
+        .settingsContainer {
+            background: rgba(0, 0, 0, 0.2);
+            width: fit-content;
+        }
+        .settingsFigure {
+            padding: 2px;
+            width: 100%;
+            text-align: -webkit-center;
+        }
+        .divRotPosFigure{
+            margin: 10px auto;
+            min-width: max-content;
+        }
+        .divSliderFigure {
+            text-align: center;
+        }
+
+        .sliderMin, .sliderMax{
+            padding: 2px;
+        }
+        .buttonFigure {
+            margin: 0px 0px 0px 10px;
+        }
+        .buttonFigureReset{
+            float: left;
+        }
+
+        .tdFlag{
+            padding: 2px;
+            width: 100px;
+        }
+        .stateFlag{
+            border: 1px solid #0014ff;
+            border-radius: 25px;
+            padding: 2px 6px 5px 6px;
+            text-align: center;
+            background: #8b8ef5;
+            box-shadow: 0px 6px 15px #1000ff61;
+        }
+        .flagTrue{
+            border: 1px solid #1bff00;
+            border-radius: 25px;
+            padding: 3px 8px 6px 8px;
+            text-align: center;
+            background: #8bf58e;
+            box-shadow: 0px 6px 15px #1bff0061;
+        }
+        .flagFalse{
+            border: 1px solid red;
+            border-radius: 25px;
+            padding: 2px 6px 5px 6px;
+            text-align: center;
+            background: #f58b8b;
+            box-shadow: 0px 6px 15px #ff000061;
+        }
+
+        .bottomText{
+            position: absolute;
+            bottom: 25px;
+            right: 20px;
+            font: normal 1.2em Josefin Sans,Arial,Helvetica;
+            text-shadow: 0px 6px 15px #1000ff61;
+        }
+    </style>
+
+    <script src="./common/InitShaders.js"></script>
+    <script src="./common/MVnew.js"></script>
+    <script src="Homework1.js"></script>
+</head>
+
+<body>
+    <!-- Per-Vertex -->
+    <script id="PV-vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        
+        in vec4 aPosition;
+        in vec4 aColor;
+        in vec4 aNormal;
+        in vec2 aTexCoord;
+        in vec4 aTangent;
+        in vec4 aEmissions;
+        
+        out vec4 vColor;
+        
+        uniform mat4 uModelViewMatrix, uProjectionMatrix, uRotationMatrix;
+        uniform mat3 uNormalMatrix;
+
+        uniform bool uLightsFlag;
+        uniform vec4 uLightPositions1, uLightPositions2, uLightPositions3;
+        uniform vec4 uAmbientProducts, uDiffuseProducts, uSpecularProducts;
+        uniform float uShininess;
+
+        void main() {
+            gl_Position = uProjectionMatrix * uModelViewMatrix * uRotationMatrix * aPosition;
+            vec3 NN = normalize((uModelViewMatrix * uRotationMatrix * aNormal).xyz);
+
+            vec3 eyePosition = (uModelViewMatrix * uRotationMatrix * aPosition).xyz;
+            vec3 E = normalize(-eyePosition);
+
+            vec3 eyeLightPos1 = (uModelViewMatrix * uLightPositions1).xyz;
+            vec3 eyeLightPos2 = (uModelViewMatrix * uLightPositions2).xyz;
+            vec3 eyeLightPos3 = (uModelViewMatrix * uLightPositions3).xyz;
+        
+            vec3 L1 = normalize(eyeLightPos1 - eyePosition);
+            vec3 L2 = normalize(eyeLightPos2 - eyePosition);
+            vec3 L3 = normalize(eyeLightPos3 - eyePosition);
+
+            vec3 H1 = normalize(L1 + E);
+            vec3 H2 = normalize(L2 + E);
+            vec3 H3 = normalize(L3 + E);
+
+            vec4 totalLight = vec4(0.0, 0.0, 0.0, 1.0);
+            if(uLightsFlag){
+                vec4 ambient = uAmbientProducts;
+
+                vec3 LL = normalize(L1);
+                float Kd = max(dot(LL, NN), 0.0);
+                vec4 diffuse = Kd*uDiffuseProducts;
+                float Ks = pow( max(dot(NN, H1), 0.0), uShininess );
+                vec4 specular = Ks * uSpecularProducts;
+                if( dot(H1, NN) < 0.0 ) {
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+                }
+                totalLight += ambient+diffuse+specular;
+
+                LL = normalize(L2);
+                Kd = max(dot(LL, NN), 0.0);
+                diffuse = Kd*uDiffuseProducts;
+                Ks = pow( max(dot(NN, H2), 0.0), uShininess );
+                specular = Ks * uSpecularProducts;
+                if( dot(H2, NN) < 0.0 ) {
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+                }
+                totalLight += ambient+diffuse+specular;
+
+                LL = normalize(L3);
+                Kd = max(dot(LL, NN), 0.0);
+                diffuse = Kd*uDiffuseProducts;
+                Ks = pow( max(dot(NN, H3), 0.0), uShininess );
+                specular = Ks * uSpecularProducts;
+                if( dot(H3, NN) < 0.0 ) {
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+                }
+                totalLight += ambient+diffuse+specular;
+
+                totalLight = totalLight;
+            }
+
+            vColor = aColor * totalLight * aEmissions;
+        }
+    </script>
+    <script id="PV-fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+            
+        precision mediump float;
+
+        in vec4 vColor;
+
+        out vec4 fColor;
+        
+        void main() {
+            fColor = vColor;
+        }
+    </script>
+
+    <!-- Per-Fragment -->
+    <script id="PF-vertex-shader" type="x-shader/x-vertex">
+        #version 300 es
+        
+        in vec4 aPosition;
+        in vec4 aColor;
+        in vec4 aNormal;
+        in vec2 aTexCoord;
+        in vec4 aTangent;
+        in vec4 aEmissions;
+        
+        out vec3 vL1, vL2, vL3;
+        out vec3 vE;
+        out vec3 vNN;
+        out vec2 vTexCoord;
+        out vec4 vColor;
+        out vec4 vEmissions;
+        
+        uniform bool uLightsFlag;
+        uniform vec4 uLightPositions1, uLightPositions2, uLightPositions3;
+
+        uniform mat4 uModelViewMatrix, uProjectionMatrix, uRotationMatrix;
+        uniform mat3 uNormalMatrix;
+
+        uniform bool uTextureFlag;
+
+        void main() {
+            vec3 N;
+            vec3 T;
+
+            gl_Position = uProjectionMatrix * uModelViewMatrix * uRotationMatrix * aPosition;
+            
+            if(uTextureFlag){
+                N = normalize( uNormalMatrix * (uRotationMatrix * aNormal).xyz );
+                T = normalize( uNormalMatrix * (uRotationMatrix * aTangent).xyz );
+            } else {
+                N = normalize( (uModelViewMatrix * uRotationMatrix * aNormal).xyz );
+                T = normalize( (uModelViewMatrix * uRotationMatrix * aTangent).xyz );
+                vNN = normalize( (uModelViewMatrix * uRotationMatrix * aNormal).xyz );
+            }
+
+            vec3 eyePosition = (uModelViewMatrix * uRotationMatrix * aPosition).xyz;
+            vec3 B = cross(N, T);
+            vE = normalize(-eyePosition);
+
+            vec3 eyeLightPos1 = (uModelViewMatrix * uLightPositions1).xyz;
+            vec3 eyeLightPos2 = (uModelViewMatrix * uLightPositions2).xyz;
+            vec3 eyeLightPos3 = (uModelViewMatrix * uLightPositions3).xyz;
+
+            if(uTextureFlag){
+                vL1 = normalize(vec3( dot(T, eyeLightPos1 - eyePosition),
+                                      dot(B, eyeLightPos1 - eyePosition),
+                                      dot(N, eyeLightPos1 - eyePosition) ));
+                vL2 = normalize(vec3( dot(T, eyeLightPos2 - eyePosition),
+                                      dot(B, eyeLightPos2 - eyePosition),
+                                      dot(N, eyeLightPos2 - eyePosition) ));
+                vL3 = normalize(vec3( dot(T, eyeLightPos3 - eyePosition),
+                                      dot(B, eyeLightPos3 - eyePosition),
+                                      dot(N, eyeLightPos3 - eyePosition) ));
+            } else {
+                vL1 = normalize(eyeLightPos1 - eyePosition);
+                vL2 = normalize(eyeLightPos2 - eyePosition);
+                vL3 = normalize(eyeLightPos3 - eyePosition);
+            }
+
+            vTexCoord = aTexCoord;
+            vColor = aColor;
+            vEmissions = aEmissions;
+        }
+    </script>
+    <script id="PF-fragment-shader" type="x-shader/x-fragment">
+        #version 300 es
+            
+        precision mediump float;
+        
+        in vec3 vL1, vL2, vL3;
+        in vec3 vE;
+        in vec3 vNN;
+        in vec2 vTexCoord;
+        in vec4 vColor;
+        in vec4 vEmissions;
+
+        out vec4 fColor;
+
+        uniform bool uLightsFlag;
+        uniform vec4 uAmbientProducts, uDiffuseProducts, uSpecularProducts;
+        uniform float uShininess;
+
+        uniform bool uTextureFlag;
+        uniform sampler2D uTexMap;
+        
+        void main() {
+            vec3 NNTex;
+
+            if(uTextureFlag){
+                vec4 N = texture(uTexMap, vTexCoord);
+                NNTex =  normalize(2.0*N.xyz-1.0);
+            } else {
+                NNTex = vNN;
+            }
+
+            vec3 H1 = normalize(vL1 + vE);
+            vec3 H2 = normalize(vL2 + vE);
+            vec3 H3 = normalize(vL3 + vE);
+
+            vec4 totalLight = vec4(0.0, 0.0, 0.0, 1.0);
+            if(uLightsFlag){
+                vec4 ambient = uAmbientProducts;
+
+                vec3 LL = normalize(vL1);
+                float Kd = max(dot(LL, NNTex), 0.0);
+                vec4 diffuse = Kd*uDiffuseProducts;
+                float Ks = pow( max(dot(NNTex, H1), 0.0), uShininess );
+                vec4 specular = Ks * uSpecularProducts;
+                if( dot(H1, NNTex) < 0.0 ) {
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+                }
+                totalLight += ambient+diffuse+specular;
+
+                LL = normalize(vL2);
+                Kd = max(dot(LL, NNTex), 0.0);
+                diffuse = Kd*uDiffuseProducts;
+                Ks = pow( max(dot(NNTex, H2), 0.0), uShininess );
+                specular = Ks * uSpecularProducts;
+                if( dot(H2, NNTex) < 0.0 ) {
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+                }
+                totalLight += ambient+diffuse+specular;
+
+                LL = normalize(vL3);
+                Kd = max(dot(LL, NNTex), 0.0);
+                diffuse = Kd*uDiffuseProducts;
+                Ks = pow( max(dot(NNTex, H3), 0.0), uShininess );
+                specular = Ks * uSpecularProducts;
+                if( dot(H3, NNTex) < 0.0 ) {
+                    specular = vec4(0.0, 0.0, 0.0, 1.0);
+                }
+                totalLight += ambient+diffuse+specular;
+
+                totalLight = totalLight;
+            }
+
+            fColor = vColor * totalLight * vEmissions;
+        }
+    </script>
+
+    <div>
+        <div class="divSettings">
+            <div class="settingsFigure">
+                <h1 class="firstTitle">Flag Buttons</h1>
+                <table class="divRotPosFigure">
+                    <tr class="divSliderFigure">
+                        <td class="tdFlag"><input id="switchProgram" type="button" value="Switch Per-Vertex/Per-Fragment"></td>
+                        <td class="tdFlag"><span id="switchProgramSpan" class="stateFlag">Vertex</span></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td class="tdFlag"><input id="textureFlag" type="button" value="Texture On/Off"></td>
+                        <td class="tdFlag"><span id="textureFlagSpan" class="flagFalse">🗙</span></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td class="tdFlag"><input id="lightsFlag" type="button" value="Lights On/Off"></td>
+                        <td class="tdFlag"><span id="lightsFlagSpan" class="flagTrue">✔</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="settingsFigure">
+                <h1 class="firstTitle">View Settings</h1>
+                <table class="divRotPosFigure">
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">zNear 0.1</span></td>
+                        <td><input id="zNearSlider" class="sliderFigure" type="range" min="0.1" max="3" step="0.1" value="1"></td>
+                        <td><span class="sliderMax">3</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('zNearSlider', 1)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">zFar 3</span></td>
+                        <td><input id="zFarSlider" class="sliderFigure" type="range" min="3" max="20" step="1" value="12"></td>
+                        <td><span class="sliderMax">20</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('zFarSlider', 12)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">radius 0</span></td>
+                        <td><input id="radiusSlider" class="sliderFigure" type="range" min="0" max="10" step="1" value="4"></td>
+                        <td><span class="sliderMax">10</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('radiusSlider', 4)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">theta -90</span></td>
+                        <td><input id="thetaSlider" class="sliderFigure" type="range" min="-90" max="90" step="10" value="20"></td>
+                        <td><span class="sliderMax">90</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('thetaSlider', 20)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">phi -180</span></td>
+                        <td><input id="phiSlider" class="sliderFigure" type="range" min="-180" max="180" step="10" value="0"></td>
+                        <td><span class="sliderMax">180</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('phiSlider', 0)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">fov 10</span></td>
+                        <td><input id="fovSlider" class="sliderFigure" type="range" min="10" max="120" step="5" value="45"></td>
+                        <td><span class="sliderMax">120</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('fovSlider', 45)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">aspect 0.5</span></td>
+                        <td><input id="aspectSlider" class="sliderFigure" type="range" min="0.5" max="2" step="0.1" value="1"></td>
+                        <td><span class="sliderMax">2</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('aspectSlider', 1)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td colspan="4"><input class="buttonFigureReset" type="button" value="reset All Settings" onclick="resetView()"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="divCanvas">
+            <canvas id="gl-canvas" width="512" height="512"> </canvas>
+        </div>
+
+        <div class="divSettings">
+            <div class="settingsFigure">
+                <h1 class="firstTitle">MyShape Settings</h1>
+                <table class="divRotPosFigure">
+                    <tr>
+                        <td colspan="4">
+                            <span class="secondTitle">Position</span>
+                        </td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">X -5</span></td>
+                        <td><input id="pMyShapeX" class="sliderFigure" type="range" min="-5" max="5" step="0.1" value="0"></td>
+                        <td><span class="sliderMax">5</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('pMyShapeX', 0)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">Y -5</span></td>
+                        <td><input id="pMyShapeY" class="sliderFigure" type="range" min="-5" max="5" step="0.1" value="0.1"></td>
+                        <td><span class="sliderMax">5</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('pMyShapeY', 0.1)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">Z -5</span></td>
+                        <td><input id="pMyShapeZ" class="sliderFigure" type="range" min="-5" max="5" step="0.1" value="-1"></td>
+                        <td><span class="sliderMax">5</span></td>
+                        <td><input class="buttonFigure" type="button" value="reset" onclick="resetSlider('pMyShapeZ', -1)"></td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td colspan="4"><input class="buttonFigureReset" type="button" value="reset Position" onclick="resetPositionMyShape()"></td>
+                    </tr>
+                </table>
+                <table class="divRotPosFigure">
+                    <tr>
+                        <td colspan="4">
+                            <span class="secondTitle">Rotation</span>
+                        </td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">X -180</span></td>
+                        <td><input id="rMyShapeX" class="sliderFigure" type="range" min="-180" max="180" step="1" value="0"></td>
+                        <td><span class="sliderMax">180</span></td>
+                        <td>
+                            <input id="rotateXFlag" type="checkbox" value="rotateXFlag">
+                            <label for="rotateXFlag">Rotation in X</label>
+                            <input class="buttonFigure" type="button" value="reset" onclick="resetSlider('rMyShapeX', 0)">
+                        </td>
+                        
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">Y -180</span></td>
+                        <td><input id="rMyShapeY" class="sliderFigure" type="range" min="-180" max="180" step="1" value="0"></td>
+                        <td><span class="sliderMax">180</span></td>
+                        <td>
+                            <input id="rotateYFlag" type="checkbox" value="rotateYFlag">
+                            <label for="rotateYFlag">Rotation in Y</label>
+                            <input class="buttonFigure" type="button" value="reset" onclick="resetSlider('rMyShapeY', 0)">
+                        </td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td><span class="sliderMin">Z -180</span></td>
+                        <td><input id="rMyShapeZ" class="sliderFigure" type="range" min="-180" max="180" step="1" value="0"></td>
+                        <td><span class="sliderMax">180</span></td>
+                        <td>
+                            <input id="rotateZFlag" type="checkbox" value="rotateZFlag">
+                            <label for="rotateZFlag">Rotation in Z</label>
+                            <input class="buttonFigure" type="button" value="reset" onclick="resetSlider('rMyShapeZ', 0)">
+                        </td>
+                    </tr>
+                    <tr class="divSliderFigure">
+                        <td colspan="2">
+                            <input class="buttonFigureReset" type="button" value="reset Rotation" onclick="resetRotationMyShape()">
+                        </td>
+                        <td colspan="2">
+                            <p class="infoP">ⓘ to automatic rotate the shape click the checkbox and use the slider to change the speed of the rotation</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <span class="bottomText">Made by Alessandro Lambertini<br>Mat: 1938390</span>
+    </div>
+</body>
+</html>
