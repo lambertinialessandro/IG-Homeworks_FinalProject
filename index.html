@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ineractive Graphics</title>
+
+    <style>
+        @property --angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .singleElement {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+
+            height: 500px;
+            padding: 5px 5px;
+
+            --angle: 0deg;
+
+            border-radius: 32px;
+            z-index: 1;
+            background: linear-gradient(var(--angle), #03a9f4, #f441a5, #f441a5, #ffeb3b, #ffeb3b, #2bf403);
+        }
+
+        .singleElement:hover {
+            transition: 0.4s;
+            border-image: linear-gradient(var(--angle), #03a9f4, #f441a5, #f441a5, #ffeb3b, #ffeb3b, #2bf403) 1;
+            animation: 5s rotate linear infinite;
+        }
+
+        @keyframes rotate {
+            to {
+                --angle: 360deg;
+            }
+        }
+
+        .linkElem {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            
+            background: white;
+            padding: 50px 50px;
+            border-radius: 32px;
+            height: 300px;
+            font-size: 22px;
+            font-family: sans-serif;
+        }
+
+        .showElem {
+            width: 250px;
+            height: 250px;
+        }
+
+        .textLink {}
+
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <a href="[HW_1]/index.html" class="singleElement">
+            <div class="linkElem">
+                <img src="./resources/[HW_1].png" alt="" class="showElem">
+                <span class="textLink">[HW_1]</span>
+            </div>
+        </a>
+        <a href="[HW_2]/index.html" class="singleElement">
+            <div class="linkElem">
+                <img src="./resources/[HW_2].png" alt="" class="showElem">
+                <span class="textLink">[HW_2]</span>
+            </div>
+        </a>
+        <a href="[FinalProject]/index.html" class="singleElement">
+            <div class="linkElem">
+                <img src="./resources/[FinalProject].png" alt="" class="showElem">
+                <span class="textLink">[FinalProject]</span>
+            </div>
+        </a>
+    </div>
+</body>
+
+</html>
