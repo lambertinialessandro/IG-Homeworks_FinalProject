@@ -1,18 +1,6 @@
 # 👾 Interactive Graphics Projects
 
-<br />
-<br />
-<p align="center">
-  <a href="https://github.com/SapienzaInteractiveGraphicsCourse/final-project-la_dl-team">
-    <img alt="SuperMario" title="SuperMario" src="./resources/images/SM.png" width="450">
-  </a>
-</p>
-
 Final project for the course of Interactive Graphics 2020/2021.
-
->Student: Alessandro Lambertini Mat: `1938390`;
->
->Student: Denise Landini Mat: `1938388`;
 
 ## 🌐 Browsers
 
