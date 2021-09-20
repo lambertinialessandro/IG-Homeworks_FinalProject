@@ -1,4 +1,4 @@
-# 👾 Interactive Graphics Projects
+# 2021 IG homework 1, 2 and Final Project
 
 Final project for the course of Interactive Graphics 2020/2021.
 
@@ -9,30 +9,13 @@ Final project for the course of Interactive Graphics 2020/2021.
 |Edge|Good Performance|⭐⭐⭐|
 |Chrome|Good Performance on some computers|⭐⭐|
 |Firefox|Bad Performance|❌|
+|Safari|Bad Performance|❌|
 
 We also suggest to play the game in full screen (press `F11`)
 
-## 🎮 Play the game
+## 💯 Final score:
 
-<details><summary><b>Show commands</b></summary>
-
-- `W` `A` `S` `D`: directional movement
-- `SPACE`: jump
-- `SHIFT`: run
-- `Mouse`: move the camera
-- `ESC`: pause
-
-</details>
-
-<details><summary><b>Show commands (Fly mode)</b></summary>
-
-- `W` `A` `S` `D`: directional movement
-- `SPACE`: go up
-- `SHIFT`: go down
-- `Mouse`: move the camera
-- `ESC`: pause
-
-</details>
+Score: `30L/30`
 
 ### [Click here to see the projects.](https://lambertinialessandro.github.io/IG-Homeworks_FinalProject/)
 
