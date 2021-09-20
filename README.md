@@ -1,6 +1,6 @@
 # 2021 IG homework 1, 2 and Final Project
 
-Final project for the course of Interactive Graphics 2020/2021.
+First, Second Homework and Final project for the course of Interactive Graphics 2020/2021.
 
 ## 🌐 Browsers
 
