@@ -88,3 +88,29 @@ for any doubt or clarification contact me on:
 
 -   send me an email at: lambertini.1938390@studenti.uniroma1.it
 -   send me a DM on instagram [Link 🔗](https://www.instagram.com/lambertinialessandro/)
+
+## 🎞️ Snapshots
+
+<p align="center">
+    <img src="./READMEimages/start_game.jpeg" style="width: 750px;"></img>
+</p>
+
+<p align="center">
+    <img src="./READMEimages/game.png" style="width: 750px;"></img>
+</p>
+
+<p align="center">
+    <img src="./READMEimages/dayTime.png" style="width: 750px;"></img>
+    <br>
+    DayTime modalities
+</p>
+
+<p align="center">
+    <img src="./READMEimages/lose.png" style="width: 750px;"></img>
+    <br>
+    Game Over screen
+</p>
+
+<p align="center">
+    <img src="./READMEimages/settings.png" style="width: 750px;"></img>
+</p>
