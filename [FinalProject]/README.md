@@ -74,7 +74,7 @@ We also suggest to play the game in full screen (press `F11`)
 
 </details>
 
-### [Click here to play the game.](https://lambertinialessandro.github.io/IG-final_project_la_dl_team/)
+### [Click here to play the game.](https://lambertinialessandro.github.io/IG-Homeworks_FinalProject/[FinalProject]/index.html)
 
 ## 💯 Final score:
 
